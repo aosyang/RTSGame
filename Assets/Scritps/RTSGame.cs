@@ -7,12 +7,17 @@ public class RTSGame : MonoBehaviour
 
 	List<BaseVehicle> selVehicleList = new List<BaseVehicle>();
 	int unitAndTerrainLayer;
+	int unitLayer;
+	int terrainLayer;
 
 	// Use this for initialization
 	void Start ()
 	{
 		unitAndTerrainLayer = 1 << LayerMask.NameToLayer ("Terrain");
 		unitAndTerrainLayer |= 1 << LayerMask.NameToLayer ("Unit");
+
+		unitLayer = 1 << LayerMask.NameToLayer ("Unit");
+		terrainLayer = 1 << LayerMask.NameToLayer ("Terrain");
 	}
 	
 	// Update is called once per frame
@@ -20,18 +25,15 @@ public class RTSGame : MonoBehaviour
 	{
 		if (Input.GetMouseButton(1))
 		{
-
+			bool vehiclePickedUp = false;
 			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit[] hitInfos = Physics.RaycastAll(screenRay, 1000.0f, unitAndTerrainLayer);
+			RaycastHit[] hitInfos = Physics.RaycastAll(screenRay, 1000.0f, unitLayer);
 			BaseVehicle vehicle = null;
-			Terrain terrain = null;
-			Vector3 terrainClickPoint = Vector3.zero;
 
 			foreach (RaycastHit rh in hitInfos)
 			{
 				//Debug.Log(rh.transform.name);
 				BaseVehicle v = rh.transform.GetComponentInParent<BaseVehicle>();
-				Terrain t = rh.transform.GetComponent<Terrain>();
 
 				if (v)
 				{
@@ -41,22 +43,23 @@ public class RTSGame : MonoBehaviour
 						vehicle = v;
 					}
 					selVehicleList.Add(v);
-				}
-				else if (t)
-				{
-					if (terrain == null)
-					{
-						terrain = t;
-						terrainClickPoint = rh.point;
-					}
+					vehiclePickedUp = true;
 				}
 			}
 
-			if (!vehicle && HasSelectedVehicles())
+			if (!vehiclePickedUp)
 			{
-				foreach (BaseVehicle v in selVehicleList)
+				RaycastHit hitInfo;
+
+				if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
 				{
-					v.SetMovingTarget(terrainClickPoint);
+					if (HasSelectedVehicles())
+					{
+						foreach (BaseVehicle v in selVehicleList)
+						{
+							v.SetMovingTarget(hitInfo.point);
+						}
+					}
 				}
 			}
 		}
