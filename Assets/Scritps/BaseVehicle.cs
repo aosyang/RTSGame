@@ -72,4 +72,9 @@ public class BaseVehicle : MonoBehaviour
     {
         return 0.0f;
     }
+
+	public string GetTypeName()
+	{
+		return "Tank";
+	}
 }
