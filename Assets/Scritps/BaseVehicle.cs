@@ -6,9 +6,11 @@ public class BaseVehicle : MonoBehaviour
     int terrainLayer = -1;
 
     public float vehicleSpeed = 5.0f;
+	public float vehicleRotateSpeed = 2.0f;
 
     Vector3 targetPoint;
     bool moving = false;
+	bool rotating = false;
 
     Vector3 lastFramePosition;
     
@@ -24,20 +26,37 @@ public class BaseVehicle : MonoBehaviour
     {
         if (moving)
         {
-            Vector3 deltaPos = targetPoint - transform.position;
-            deltaPos.y = 0.0f;
-            float planarDist = deltaPos.sqrMagnitude;
-            deltaPos = deltaPos.normalized * Time.deltaTime * vehicleSpeed;
-            
-            if (deltaPos.sqrMagnitude < planarDist)
-                transform.position = transform.position + deltaPos;
-            else
-            {
-                Vector3 targetGroundPos = targetPoint;
-                targetGroundPos.y += GetHeight();
-                transform.position = targetGroundPos;
-                moving = false;
-            }
+			Vector3 deltaPos = targetPoint - transform.position;
+
+			Vector3 targetDir = Vector3.ProjectOnPlane(deltaPos, transform.up).normalized;
+
+			//Debug.Log (Vector3.Dot(transform.forward, targetDir));
+
+			if (Vector3.Dot(transform.forward, targetDir) >= 0.995f || !rotating)
+			{
+				rotating = false;
+
+	            deltaPos.y = 0.0f;
+	            float planarDist = deltaPos.sqrMagnitude;
+	            deltaPos = deltaPos.normalized * Time.deltaTime * vehicleSpeed;
+	            
+	            if (deltaPos.sqrMagnitude < planarDist)
+	                transform.position = transform.position + deltaPos;
+	            else
+	            {
+	                Vector3 targetGroundPos = targetPoint;
+	                targetGroundPos.y += GetHeight();
+	                transform.position = targetGroundPos;
+	                moving = false;
+	            }
+			}
+			
+			if (rotating)
+			{
+				float step = Time.deltaTime * vehicleRotateSpeed;
+				Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+				transform.rotation = Quaternion.LookRotation(newDir, transform.up);
+			}
         }
 
         // Put vehicle on the ground
@@ -66,11 +85,13 @@ public class BaseVehicle : MonoBehaviour
 	{
 		targetPoint = target;
 		moving = true;
+		rotating = true;
 	}
 
 	public void StopMoving()
 	{
 		moving = false;
+		rotating = false;
 	}
 
 	public string GetTypeName()

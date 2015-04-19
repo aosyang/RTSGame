@@ -29,7 +29,7 @@ public class RTSGame : MonoBehaviour
 
 			foreach (RaycastHit rh in hitInfos)
 			{
-				Debug.Log(rh.transform.name);
+				//Debug.Log(rh.transform.name);
 				BaseVehicle v = rh.transform.GetComponentInParent<BaseVehicle>();
 				Terrain t = rh.transform.GetComponent<Terrain>();
 
