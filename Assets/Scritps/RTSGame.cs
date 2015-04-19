@@ -18,7 +18,7 @@ public class RTSGame : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButton(1))
 		{
 
 			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -70,5 +70,10 @@ public class RTSGame : MonoBehaviour
 	public List<BaseVehicle> GetSelectedVehicles()
 	{
 		return selVehicleList;
+	}
+
+	public void SetSelectedVehicles(List<BaseVehicle> list)
+	{
+		selVehicleList = list;
 	}
 }
