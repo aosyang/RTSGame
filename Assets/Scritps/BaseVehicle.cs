@@ -55,23 +55,23 @@ public class BaseVehicle : MonoBehaviour
 
             lastFramePosition = transform.position;
         }
-
-        if (Input.GetMouseButton(0))
-        {
-            Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
-            {
-                targetPoint = hitInfo.point;
-                moving = true;
-            }
-        }
-
     }
 
     float GetHeight()
     {
         return 0.0f;
     }
+
+	public void SetMovingTarget(Vector3 target)
+	{
+		targetPoint = target;
+		moving = true;
+	}
+
+	public void StopMoving()
+	{
+		moving = false;
+	}
 
 	public string GetTypeName()
 	{

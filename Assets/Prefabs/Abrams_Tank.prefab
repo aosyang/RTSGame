@@ -44,7 +44,8 @@ GameObject:
   - 4: {fileID: 454188}
   - 95: {fileID: 9552572}
   - 114: {fileID: 11405902}
-  m_Layer: 0
+  - 65: {fileID: 6598412}
+  m_Layer: 8
   m_Name: Abrams_Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -578,6 +579,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 173148}
   m_Mesh: {fileID: 4300008, guid: 72bc9935bf2775d4b89d3cb53a1ad7ca, type: 3}
+--- !u!65 &6598412
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 128636}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.27999997, y: .980000019, z: 2.79999995}
+  m_Center: {x: 0, y: .479999989, z: 0}
 --- !u!95 &9552572
 Animator:
   serializedVersion: 3
