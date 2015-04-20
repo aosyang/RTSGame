@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class RTSGame : MonoBehaviour
 {
 
-	List<BaseVehicle> selVehicleList = new List<BaseVehicle>();
+	List<BaseUnit> selectedUnitList = new List<BaseUnit>();
 	int unitAndTerrainLayer;
 	int unitLayer;
 	int terrainLayer;
@@ -23,41 +23,60 @@ public class RTSGame : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		/*
+		if (Input.GetMouseButtonDown (0))
+		{
+			// Navmesh test
+			NavMeshAgent[] agents = GameObject.FindObjectsOfType<NavMeshAgent>();
+			RaycastHit hitInfo;
+			
+			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
+			{
+				foreach (NavMeshAgent agent in agents)
+					agent.SetDestination(hitInfo.point);
+			}
+		}
+		*/
+
 		if (Input.GetMouseButton(1))
 		{
-			bool vehiclePickedUp = false;
+			RaycastHit hitInfo;
+			
 			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			bool unitPickedUp = false;
 			RaycastHit[] hitInfos = Physics.RaycastAll(screenRay, 1000.0f, unitLayer);
-			BaseVehicle vehicle = null;
+			BaseUnit unit = null;
 
 			foreach (RaycastHit rh in hitInfos)
 			{
 				//Debug.Log(rh.transform.name);
-				BaseVehicle v = rh.transform.GetComponentInParent<BaseVehicle>();
+				BaseUnit v = rh.transform.GetComponentInParent<BaseVehicle>();
 
 				if (v)
 				{
-					if (vehicle == null)
+					if (unit == null)
 					{
-						selVehicleList.Clear();
-						vehicle = v;
+						selectedUnitList.Clear();
+						unit = v;
 					}
-					selVehicleList.Add(v);
-					vehiclePickedUp = true;
+					selectedUnitList.Add(v);
+					unitPickedUp = true;
 				}
 			}
 
-			if (!vehiclePickedUp)
+			if (!unitPickedUp)
 			{
-				RaycastHit hitInfo;
+				//RaycastHit hitInfo;
 
 				if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
 				{
-					if (HasSelectedVehicles())
+					if (HasSelectedUnits())
 					{
-						foreach (BaseVehicle v in selVehicleList)
+						foreach (BaseUnit v in selectedUnitList)
 						{
-							v.SetMovingTarget(hitInfo.point);
+							v.SetMovingDestination(hitInfo.point);
 						}
 					}
 				}
@@ -65,18 +84,18 @@ public class RTSGame : MonoBehaviour
 		}
 	}
 
-	bool HasSelectedVehicles()
+	bool HasSelectedUnits()
 	{
-		return selVehicleList.Count != 0;
+		return selectedUnitList.Count != 0;
 	}
 
-	public List<BaseVehicle> GetSelectedVehicles()
+	public List<BaseUnit> GetSelectedUnits()
 	{
-		return selVehicleList;
+		return selectedUnitList;
 	}
 
-	public void SetSelectedVehicles(List<BaseVehicle> list)
+	public void SetSelectedUnits(List<BaseUnit> list)
 	{
-		selVehicleList = list;
+		selectedUnitList = list;
 	}
 }

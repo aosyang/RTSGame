@@ -36,25 +36,25 @@ public class HUD : MonoBehaviour
 
 			Rect selection = new Rect(x1, y1, x2 - x1, y2 - y1);
 
-			List<BaseVehicle> vehicleList = new List<BaseVehicle>();
+			List<BaseUnit> unitList = new List<BaseUnit>();
 
-			foreach (BaseVehicle v in GameObject.FindObjectsOfType<BaseVehicle>())
+			foreach (BaseUnit v in GameObject.FindObjectsOfType<BaseUnit>())
 			{
 				Vector2 screenPoint = Camera.main.WorldToScreenPoint(v.transform.position);
 
 				if (selection.Contains(screenPoint))
 				{
-					vehicleList.Add(v);
+					unitList.Add(v);
 				}
 			}
 
-			game.SetSelectedVehicles(vehicleList);
+			game.SetSelectedUnits(unitList);
 		}
 	}
 
 	void OnGUI()
 	{
-		foreach (BaseVehicle v in game.GetSelectedVehicles()) {
+		foreach (BaseUnit v in game.GetSelectedUnits()) {
 			Vector3 pos = Camera.main.WorldToScreenPoint(v.transform.position);
 			//Debug.Log(Camera.main.pixelRect);
 			GUI.Box(new Rect(pos.x - 50, Camera.main.pixelRect.height - pos.y + 20, 100, 20), v.GetTypeName());

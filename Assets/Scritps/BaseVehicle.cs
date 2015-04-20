@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseVehicle : MonoBehaviour
+public class BaseVehicle : BaseUnit
 {
     int terrainLayer = -1;
 
@@ -81,20 +81,25 @@ public class BaseVehicle : MonoBehaviour
         return 0.0f;
     }
 
-	public void SetMovingTarget(Vector3 target)
+	public override void SetMovingDestination(Vector3 moveTo)
 	{
-		targetPoint = target;
+		targetPoint = moveTo;
 		moving = true;
 		rotating = true;
 	}
 
-	public void StopMoving()
+	public override Vector3 GetMovingDestination()
+	{
+		return targetPoint;
+	}
+
+	public override void StopMoving()
 	{
 		moving = false;
 		rotating = false;
 	}
 
-	public string GetTypeName()
+	public override string GetTypeName()
 	{
 		return "Tank";
 	}
