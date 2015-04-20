@@ -8,6 +8,8 @@ public class BaseVehicle : BaseUnit
     public float vehicleSpeed = 5.0f;
 	public float vehicleRotateSpeed = 2.0f;
 
+	public bool followSurfaceNormal = true;
+
     Vector3 targetPoint;
     bool moving = false;
 	bool rotating = false;
@@ -68,9 +70,17 @@ public class BaseVehicle : BaseUnit
             groundPos.y += GetHeight();
             transform.position = groundPos;
 
-            //Vector3 planarTarget = groundPos + Vector3.ProjectOnPlane(targetPoint - groundPos, hitInfo.normal);
-            Vector3 planarTarget = groundPos - lastFramePosition + groundPos;
-            transform.LookAt(planarTarget, hitInfo.normal);
+			//Vector3 planarTarget = groundPos + Vector3.ProjectOnPlane(targetPoint - groundPos, hitInfo.normal);
+			Vector3 planarTarget = groundPos - lastFramePosition + groundPos;
+			if (followSurfaceNormal)
+			{
+	            transform.LookAt(planarTarget, hitInfo.normal);
+			}
+			else
+			{
+				planarTarget.y = transform.position.y;
+				transform.LookAt(planarTarget, Vector3.up);
+			}
 
             lastFramePosition = transform.position;
         }

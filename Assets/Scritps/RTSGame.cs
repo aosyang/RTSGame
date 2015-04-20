@@ -24,61 +24,19 @@ public class RTSGame : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		/*
-		if (Input.GetMouseButtonDown (0))
-		{
-			// Navmesh test
-			NavMeshAgent[] agents = GameObject.FindObjectsOfType<NavMeshAgent>();
-			RaycastHit hitInfo;
-			
-			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
-			{
-				foreach (NavMeshAgent agent in agents)
-					agent.SetDestination(hitInfo.point);
-			}
-		}
-		*/
-
 		if (Input.GetMouseButton(1))
 		{
 			RaycastHit hitInfo;
 			
 			Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-			bool unitPickedUp = false;
-			RaycastHit[] hitInfos = Physics.RaycastAll(screenRay, 1000.0f, unitLayer);
-			BaseUnit unit = null;
-
-			foreach (RaycastHit rh in hitInfos)
+			if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
 			{
-				//Debug.Log(rh.transform.name);
-				BaseUnit v = rh.transform.GetComponentInParent<BaseVehicle>();
-
-				if (v)
+				if (HasSelectedUnits())
 				{
-					if (unit == null)
+					foreach (BaseUnit v in selectedUnitList)
 					{
-						selectedUnitList.Clear();
-						unit = v;
-					}
-					selectedUnitList.Add(v);
-					unitPickedUp = true;
-				}
-			}
-
-			if (!unitPickedUp)
-			{
-				//RaycastHit hitInfo;
-
-				if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, terrainLayer))
-				{
-					if (HasSelectedUnits())
-					{
-						foreach (BaseUnit v in selectedUnitList)
-						{
-							v.SetMovingDestination(hitInfo.point);
-						}
+						v.SetMovingDestination(hitInfo.point);
 					}
 				}
 			}

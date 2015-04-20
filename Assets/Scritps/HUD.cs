@@ -35,21 +35,37 @@ public class HUD : MonoBehaviour
 			if (x1 > x2) Swap(ref x1, ref x2);
 			if (y1 > y2) Swap(ref y1, ref y2);
 
-			Rect selection = new Rect(x1, y1, x2 - x1, y2 - y1);
-
-			List<BaseUnit> unitList = new List<BaseUnit>();
-
-			foreach (BaseUnit v in GameObject.FindObjectsOfType<BaseUnit>())
+			if (x2 - x1 < 4 && y2 - y1 < 4)
 			{
-				Vector2 screenPoint = Camera.main.WorldToScreenPoint(v.transform.position);
+				Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+				int unitLayer = 1 << LayerMask.NameToLayer ("Unit");
 
-				if (selection.Contains(screenPoint))
+				RaycastHit hitInfo;
+				if (Physics.Raycast(screenRay, out hitInfo, 1000.0f, unitLayer))
 				{
-					unitList.Add(v);
+					List<BaseUnit> unitList = new List<BaseUnit>();
+					unitList.Add (hitInfo.transform.GetComponent<BaseUnit>());
+					game.SetSelectedUnits(unitList);
 				}
 			}
+			else
+			{
+				Rect selection = new Rect(x1, y1, x2 - x1, y2 - y1);
 
-			game.SetSelectedUnits(unitList);
+				List<BaseUnit> unitList = new List<BaseUnit>();
+
+				foreach (BaseUnit v in GameObject.FindObjectsOfType<BaseUnit>())
+				{
+					Vector2 screenPoint = Camera.main.WorldToScreenPoint(v.transform.position);
+
+					if (selection.Contains(screenPoint))
+					{
+						unitList.Add(v);
+					}
+				}
+
+				game.SetSelectedUnits(unitList);
+			}
 		}
 	}
 
