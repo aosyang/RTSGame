@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent (typeof (RTSGame))]
 public class HUD : MonoBehaviour
 {
 	RTSGame game;
