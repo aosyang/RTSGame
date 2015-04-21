@@ -10,6 +10,7 @@ public class NavMeshRunner : BaseUnit
 	public GameObject bulletTrail;
 	float deadTime = 0.2f;
 	Vector3 deadPos;
+	BaseUnit lastTarget;
 
 	// Use this for initialization
 	public override void Start ()
@@ -37,12 +38,17 @@ public class NavMeshRunner : BaseUnit
 
 	void FireAtEnemyInSight()
 	{
+		if (lastTarget && lastTarget.IsAlive ()) {
+			FireAt(lastTarget);
+			return;
+		}
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, 10.0f);
 
 		for (int i=0; i<hitColliders.Length; i++) {
 			BaseUnit unit = hitColliders[i].gameObject.GetComponent<BaseUnit>();
 			if (unit && unit.GetTeamID() != teamID && unit.IsAlive())
 			{
+				lastTarget = unit;
 				FireAt(unit);
 				break;
 			}
