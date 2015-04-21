@@ -17,10 +17,13 @@ public class BaseVehicle : BaseUnit
     Vector3 lastFramePosition;
     
     // Use this for initialization
-    void Start()
+	public override void Start()
     {
+		base.Start();
         terrainLayer = 1 << LayerMask.NameToLayer("Terrain");
-        lastFramePosition = transform.position - new Vector3(0.0f, 0.0f, 1.0f);
+		//lastFramePosition = transform.position + transform.InverseTransformVector(new Vector3(0.0f, 0.0f, 1.0f));
+		//Debug.Log (lastFramePosition);
+		lastFramePosition = transform.position - new Vector3 (0.0f, 0.0f, 1.0f);
     }
     
     // Update is called once per frame
@@ -93,9 +96,11 @@ public class BaseVehicle : BaseUnit
 
 	public override void SetMovingDestination(Vector3 moveTo)
 	{
-		targetPoint = moveTo;
-		moving = true;
-		rotating = true;
+		if (IsAlive ()) {
+			targetPoint = moveTo;
+			moving = true;
+			rotating = true;
+		}
 	}
 
 	public override Vector3 GetMovingDestination()
