@@ -39,10 +39,14 @@ public class NavMeshRunner : BaseUnit
 	void FireAtEnemyInSight()
 	{
 		if (lastTarget && lastTarget.IsAlive ()) {
-			FireAt(lastTarget);
-			return;
+			if (IsTargetInRange(lastTarget.transform))
+			{
+				FireAt(lastTarget);
+				return;
+			}
 		}
-		Collider[] hitColliders = Physics.OverlapSphere (transform.position, 10.0f);
+		
+		Collider[] hitColliders = Physics.OverlapSphere (transform.position, shootingRange);
 
 		for (int i=0; i<hitColliders.Length; i++) {
 			BaseUnit unit = hitColliders[i].gameObject.GetComponent<BaseUnit>();
