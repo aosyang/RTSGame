@@ -88,6 +88,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &152112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 463040}
+  m_Layer: 0
+  m_Name: RallyPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &164062
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,8 +236,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 110014}
-  m_LocalRotation: {x: 0, y: .382683754, z: 0, w: .923879445}
-  m_LocalPosition: {x: 18, y: 0, z: 13}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 79.2900009, y: 9.36999989, z: 87.4599991}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 453312}
@@ -236,6 +251,7 @@ Transform:
   - {fileID: 439164}
   - {fileID: 470320}
   - {fileID: 456842}
+  - {fileID: 463040}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &420370
@@ -322,6 +338,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 410404}
   m_RootOrder: 10
+--- !u!4 &463040
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152112}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 410404}
+  m_RootOrder: 11
 --- !u!4 &470320
 Transform:
   m_ObjectHideFlags: 1
@@ -3513,6 +3541,7 @@ MonoBehaviour:
   - {fileID: 2368762}
   - {fileID: 2395820}
   unitSpawnPoint: {fileID: 456842}
+  unitRallyPoint: {fileID: 463040}
   buildList:
   - {fileID: 105814, guid: abcbc68290ca4784091a97049ecbe045, type: 2}
   - {fileID: 137648, guid: 06fe7ee59961f524a97bffbcfd46f16c, type: 2}

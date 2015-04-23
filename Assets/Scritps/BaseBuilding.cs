@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BaseBuilding : BaseBattleObject {
 
 	public Transform unitSpawnPoint;
+	public Transform unitRallyPoint;
 	public List<GameObject> buildList = new List<GameObject>();
 
 	public float unitReadyTime;
@@ -26,7 +27,11 @@ public class BaseBuilding : BaseBattleObject {
 			BaseUnit unit = go.GetComponent<BaseUnit>();
 			unit.Start();
 			unit.SetTeamID(GetTeamID());
-			unit.SetMovingDestination(Vector3.zero);
+
+			if (unitRallyPoint)
+				unit.SetMovingDestination(unitRallyPoint.position);
+			else
+				unit.SetMovingDestination(Vector3.zero);
 
 			unitReadyTime = Time.time + 2.0f;
 		}
