@@ -11,6 +11,8 @@ public class RTSGame : MonoBehaviour
 	int unitLayer;
 	int terrainLayer;
 
+	public List<Material> teamColorMaterial = new List<Material>();
+
 	// Use this for initialization
 	void Start ()
 	{

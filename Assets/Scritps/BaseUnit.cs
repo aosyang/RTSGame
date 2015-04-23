@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseUnit : MonoBehaviour {
-	public int teamID = -1;
-	public int unitLife = 300;
+public class BaseUnit : BaseBattleObject {
 	public float shootingRange = 10.0f;
 
 	// Use this for initialization
-	public virtual void Start () {
+	public override void Start () {
 
 	}
 	
@@ -16,22 +14,19 @@ public class BaseUnit : MonoBehaviour {
 	
 	}
 
-	public int GetTeamID() { return teamID; }
-
-	public virtual void DealDamage(int damage)
+	public override void DealDamage(int damage)
 	{
 		if (!IsAlive ())
 			return;
+		
+		base.DealDamage (damage);
 
-		unitLife -= damage;
-		if (unitLife <= 0)
+		if (life <= 0)
 			StopMoving ();
 	}
 
 	public bool IsTargetInRange(Vector3 target) { return Vector3.SqrMagnitude (transform.position - target) <= shootingRange * shootingRange; }
 	public bool IsTargetInRange(Transform target) { return IsTargetInRange(target.position); }
-
-	public bool IsAlive() { return unitLife > 0; }
 
 	public virtual void		SetMovingDestination(Vector3 moveTo)	{}
 	public virtual Vector3	GetMovingDestination()					{ return Vector3.zero; }
