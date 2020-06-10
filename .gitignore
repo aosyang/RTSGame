@@ -1,5 +1,9 @@
-Library/
-Temp/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
 *.csproj
 *.sln
 *.userprefs
+
+.vs/

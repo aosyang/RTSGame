@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (NavMeshAgent))]
+[RequireComponent (typeof (UnityEngine.AI.NavMeshAgent))]
 public class NavMeshRunner : BaseUnit
 {
-	NavMeshAgent agent;
+	UnityEngine.AI.NavMeshAgent agent;
 	float timeUntilReload;
 	float timeUntilDead;
 	public GameObject bulletTrail;
@@ -16,7 +16,7 @@ public class NavMeshRunner : BaseUnit
 	public override void Start ()
 	{
 		base.Start ();
-		agent = GetComponent<NavMeshAgent> ();
+		agent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		timeUntilReload = Time.time;
 	}
 	
