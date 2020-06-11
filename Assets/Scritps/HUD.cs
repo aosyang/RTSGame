@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class HUD : MonoBehaviour
 {
 	RTSGame game;
-	bool boxSelecting = false;
+	public bool boxSelecting = false;
 	Vector3 selStartPos;
 
 	// Use this for initialization

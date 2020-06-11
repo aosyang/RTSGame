@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 public class BaseVehicle : BaseUnit
 {
@@ -14,6 +15,9 @@ public class BaseVehicle : BaseUnit
     bool moving = false;
 	bool rotating = false;
 
+    NavMeshPath PathToFollow;
+    int NextPathIndex;
+
     Vector3 lastFramePosition;
     
     // Use this for initialization
@@ -24,6 +28,8 @@ public class BaseVehicle : BaseUnit
 		//lastFramePosition = transform.position + transform.InverseTransformVector(new Vector3(0.0f, 0.0f, 1.0f));
 		//Debug.Log (lastFramePosition);
 		lastFramePosition = transform.position - new Vector3 (0.0f, 0.0f, 1.0f);
+
+        PathToFollow = new NavMeshPath();
     }
     
     // Update is called once per frame
@@ -31,37 +37,60 @@ public class BaseVehicle : BaseUnit
     {
         if (moving)
         {
-			Vector3 deltaPos = targetPoint - transform.position;
+            if (NextPathIndex < PathToFollow.corners.Length)
+            {
+                Vector3 MoveTarget = PathToFollow.corners[NextPathIndex];
+                Vector3 deltaPos = MoveTarget - transform.position;
+                Vector3 targetDir2D = deltaPos;
+                targetDir2D.y = 0.0f;
+                targetDir2D.Normalize();
 
-			Vector3 targetDir = Vector3.ProjectOnPlane(deltaPos, transform.up).normalized;
+                Vector3 forward2D = transform.forward;
+                forward2D.y = 0.0f;
+                forward2D.Normalize();
 
-			//Debug.Log (Vector3.Dot(transform.forward, targetDir));
+                //Debug.Log (Vector3.Dot(transform.forward, targetDir));
 
-			if (Vector3.Dot(transform.forward, targetDir) >= 0.995f || !rotating)
-			{
-				rotating = false;
+                // Check if facing moving direction
+                if (Vector3.Dot(forward2D, targetDir2D) >= 0.995f)
+                {
+                    rotating = false;
 
-	            deltaPos.y = 0.0f;
-	            float planarDist = deltaPos.sqrMagnitude;
-	            deltaPos = deltaPos.normalized * Time.deltaTime * vehicleSpeed;
-	            
-	            if (deltaPos.sqrMagnitude < planarDist)
-	                transform.position = transform.position + deltaPos;
-	            else
-	            {
-	                Vector3 targetGroundPos = targetPoint;
-	                targetGroundPos.y += GetHeight();
-	                transform.position = targetGroundPos;
-	                moving = false;
-	            }
-			}
-			
-			if (rotating)
-			{
-				float step = Time.deltaTime * vehicleRotateSpeed;
-				Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
-				transform.rotation = Quaternion.LookRotation(newDir, transform.up);
-			}
+                    deltaPos.y = 0.0f;
+                    float SqrDistanceToGoal = deltaPos.sqrMagnitude;
+                    deltaPos = deltaPos.normalized * Time.deltaTime * vehicleSpeed;
+
+                    // Arrival checking
+                    if (deltaPos.sqrMagnitude < SqrDistanceToGoal)
+                    {
+                        transform.position = transform.position + deltaPos;
+                    }
+                    else
+                    {
+                        NextPathIndex++;
+
+                        if (NextPathIndex >= PathToFollow.corners.Length)
+                        {
+                            // Stop at goal
+                            Vector3 targetGroundPos = MoveTarget;
+                            targetGroundPos.y += GetHeight();
+                            transform.position = targetGroundPos;
+                            moving = false;
+                        }
+                    }
+                }
+                else
+                {
+                    rotating = true;
+                }
+
+                if (rotating)
+                {
+                    float step = Time.deltaTime * vehicleRotateSpeed;
+                    Vector3 newDir = Vector3.RotateTowards(forward2D, targetDir2D, step, 0.0f);
+                    transform.rotation = Quaternion.LookRotation(newDir, transform.up);
+                }
+            }
         }
 
         // Put vehicle on the ground
@@ -96,14 +125,25 @@ public class BaseVehicle : BaseUnit
 
 	public override void SetMovingDestination(Vector3 moveTo)
 	{
-		if (IsAlive ()) {
-			targetPoint = moveTo;
-			moving = true;
-			rotating = true;
-		}
-	}
+        if (IsAlive())
+        {
+            if (NavMesh.CalculatePath(transform.position, moveTo, NavMesh.AllAreas, PathToFollow))
+            {
+                // Start from the second position
+                NextPathIndex = 1;
 
-	public override Vector3 GetMovingDestination()
+                targetPoint = moveTo;
+                moving = true;
+                rotating = true;
+            }
+            else
+            {
+                Debug.Log("Path-finding failed!");
+            }
+        }
+    }
+
+    public override Vector3 GetMovingDestination()
 	{
 		return targetPoint;
 	}

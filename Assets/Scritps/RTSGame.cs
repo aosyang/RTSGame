@@ -26,7 +26,8 @@ public class RTSGame : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Input.GetMouseButton(1))
+        // Right click to move units
+		if (Input.GetMouseButtonDown(1))
 		{
 			RaycastHit hitInfo;
 			

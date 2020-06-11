@@ -7,44 +7,50 @@ public class CameraScroller : MonoBehaviour
     public float scrollSpeed = 50.0f;
     public float scrollPercentage = 0.05f;
 
+    HUD GameHUD;
+
     // Use this for initialization
     void Start()
     {
-    
+        GameHUD = FindObjectOfType<HUD>();
     }
     
     // Update is called once per frame
     void Update()
     {
-        Vector3 viewPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        Vector3 nodePos = Vector3.zero;
+        // Scroll the screen only when not running box selecting 
+        if (!GameHUD.boxSelecting)
+        {
+            Vector3 viewPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            Vector3 nodePos = Vector3.zero;
 
-        if (viewPoint.x < scrollPercentage)
-            nodePos.x -= 1.0f;
+            if (viewPoint.x < scrollPercentage)
+                nodePos.x -= 1.0f;
 
-        if (viewPoint.x > 1.0f - scrollPercentage)
-            nodePos.x += 1.0f;
+            if (viewPoint.x > 1.0f - scrollPercentage)
+                nodePos.x += 1.0f;
 
-        if (viewPoint.y < scrollPercentage)
-            nodePos.z -= 1.0f;
+            if (viewPoint.y < scrollPercentage)
+                nodePos.z -= 1.0f;
 
-        if (viewPoint.y > 1.0f - scrollPercentage)
-            nodePos.z += 1.0f;
+            if (viewPoint.y > 1.0f - scrollPercentage)
+                nodePos.z += 1.0f;
 
-        Vector3 boundPos = transform.position + nodePos.normalized * Time.deltaTime * scrollSpeed;
+            Vector3 boundPos = transform.position + nodePos.normalized * Time.deltaTime * scrollSpeed;
 
-        if (boundPos.x < minX)
-            boundPos.x = minX;
+            if (boundPos.x < minX)
+                boundPos.x = minX;
 
-        if (boundPos.x > maxX)
-            boundPos.x = maxX;
+            if (boundPos.x > maxX)
+                boundPos.x = maxX;
 
-        if (boundPos.z < minY)
-            boundPos.z = minY;
+            if (boundPos.z < minY)
+                boundPos.z = minY;
 
-        if (boundPos.z > maxY)
-            boundPos.z = maxY;
+            if (boundPos.z > maxY)
+                boundPos.z = maxY;
 
-        transform.position = boundPos;
+            transform.position = boundPos;
+        }
     }
 }
